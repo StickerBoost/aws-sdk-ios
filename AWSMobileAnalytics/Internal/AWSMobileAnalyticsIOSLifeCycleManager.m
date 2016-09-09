@@ -92,6 +92,18 @@ NSString* const AWSInsightsBackgroundQueueKey = @"com.amazon.insights.AWSMobileA
                                                  selector: @selector(applicationDidEnterForeground:)
                                                      name: UIApplicationWillEnterForegroundNotification
                                                    object: nil];
+
+        [[NSNotificationCenter defaultCenter] addObserver: self
+                                                 selector: @selector(applicationDidEnterBackground:)
+                                                     name: @"AWS_MSMessagesAppViewControllerDidResignActive"
+                                                   object: nil];
+
+        [[NSNotificationCenter defaultCenter] addObserver: self
+                                                 selector: @selector(applicationDidEnterForeground:)
+                                                     name: @"AWS_MSMessagesAppViewControllerDidBecomeActive"
+                                                   object: nil];
+
+
     }
     return self;
 }
@@ -130,7 +142,7 @@ NSString* const AWSInsightsBackgroundQueueKey = @"com.amazon.insights.AWSMobileA
 
 -(void)executeBackgroundTasks:(AWSBackgroundQueue*) queue
 {
-    UIApplication *app = [UIApplication sharedApplication];
+    UIApplication *app = [UIApplication performSelector:@selector(sharedApplication)];
     __block UIBackgroundTaskIdentifier task = [app beginBackgroundTaskWithExpirationHandler:^{
         [app endBackgroundTask:task];
         task = UIBackgroundTaskInvalid;
